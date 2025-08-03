@@ -16,6 +16,19 @@
   </head>
 
   <body>
+    <!-- L'Oréal Loading Screen -->
+    <div id="introOverlay">
+      <div class="spiral-container">
+        <img src="img/loreal-logo-loading.png"
+          alt="L'Oréal Logo"
+          class="loreal-logo-intro"
+        />
+        <div class="circle" id="circle1"></div>
+        <div class="circle" id="circle2"></div>
+        <div class="circle" id="circle3"></div>
+      </div>
+    </div>
+
     <div class="page-wrapper">
       <!------- Header / Branding ------->
       <header class="site-header">
@@ -51,6 +64,17 @@
         </button>
       </div>
 
+      <template id="productCardTemplate">
+        <div class="product-card" data-id="">
+          <img src="" alt="" />
+          <div class="product-info">
+            <h3 class="product-name"></h3>
+            <p class="product-brand"></p>
+            <div class="description-hover"></div>
+          </div>
+        </div>
+      </template>
+
       <!------- Chat Area ------->
       <section class="chatbox">
         <h2>Let's Build Your Routine</h2>
@@ -73,6 +97,19 @@
         </form>
       </section>
 
+      <button id="downloadPdfBtn" style="display: none">
+        Download Routine PDF
+      </button>
+
+      <div id="routinePreviewModal" class="modal" style="display: none">
+        <div class="modal-content">
+          <span id="closeModalBtn" class="close">&times;</span>
+          <h2>Your L'Oréal Routine</h2>
+          <pre id="routinePreviewText"></pre>
+          <button id="confirmDownloadBtn">Download PDF</button>
+        </div>
+      </div>
+
       <!------- Footer Links ------->
       <footer class="site-footer">
         <p>&copy; 2025 L'Oréal. All rights reserved.</p>
@@ -86,7 +123,8 @@
     </div>
 
     <!-- secrets.js can be removed when using Cloudflare Workers for API requests -->
-    <script src="secrets.js"></script>
-    <script src="script.js"></script>
+    <script src="./secrets.js"></script>
+    <script src="./prompt.js"></script>
+    <script src="script.js" defer></script>
   </body>
 </html>
