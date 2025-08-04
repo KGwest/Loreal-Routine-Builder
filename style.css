@@ -82,7 +82,7 @@
   height: 220px;
   top: 40px;
   left: 40px;
-  animation: spiralOut 2s ease-in 0.5s forwards;
+  animation: spiralOut 1.5s ease-in 0.2s forwards;
 }
 
 #circle2 {
@@ -90,7 +90,7 @@
   height: 260px;
   top: 20px;
   left: 20px;
-  animation: spiralOut 2.5s ease-in 0.8s forwards;
+  animation: spiralOut 2s ease-in 0.4s forwards;
 }
 
 #circle3 {
@@ -98,7 +98,7 @@
   height: 300px;
   top: 0;
   left: 0;
-  animation: spiralOut 3s ease-in 1s forwards;
+  animation: spiralOut 2.5s ease-in 0.6s forwards;
 }
 
 @keyframes spiralOut {
@@ -137,7 +137,7 @@ body {
   color: var(--black);
   background-color: var(--white);
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   animation: fadeIn 1s ease-in;
 }
 
@@ -157,6 +157,16 @@ body {
   padding-top: 40px;
   color: var(--black);
   border-bottom: 1px solid var(--gold);
+}
+
+.site-header .logo {
+  width: 75%;  /* or whatever your base was */
+  height: auto;
+}
+
+.search-section {
+  text-align: center;     /* center its contents */
+  margin: 2rem 0;         /* give it some breathing room vertically */
 }
 
 .site-title {
@@ -414,7 +424,7 @@ body {
 
 /* “Selected Products” list */
 .selected-products {
-  margin: 40px 0;
+  margin: 40px auto;     /* auto left/right = center */
   padding: 20px;
   border: 2px solid var(--gold);
   border-radius: 8px;

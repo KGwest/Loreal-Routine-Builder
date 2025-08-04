@@ -1,5 +1,3 @@
-// Copy this code into your Cloudflare Worker script
-
 export default {
   async fetch(request, env) {
     const corsHeaders = {
@@ -14,7 +12,7 @@ export default {
       return new Response(null, { headers: corsHeaders });
     }
 
-    const apiKey = env.OPENAI_API_KEY; // Make sure to name your secret OPENAI_API_KEY in the Cloudflare Workers dashboard
+    const apiKey = env.OPENAI_API_KEY; //
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
     const userInput = await request.json();
 

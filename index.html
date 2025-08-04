@@ -72,12 +72,12 @@
       </div>
 
       <template id="productCardTemplate">
-        <div class="product-card" data-id="">
+        <div class="product-card">
           <img src="" alt="" />
           <div class="product-info">
             <h3 class="product-name"></h3>
-            <p class="product-brand"></p>
-            <div class="description-hover"></div>
+            <p class="product-brand visually-hidden"></p>
+            <div class="description-hover visually-hidden"></div>
           </div>
         </div>
       </template>
@@ -97,7 +97,7 @@
             autocomplete="off"
             required
           />
-          <button type="submit" id="sendBtn">
+          <button type="button" id="sendBtn">
             <i class="fa-solid fa-paper-plane"></i>
             <span class="visually-hidden">Send</span>
           </button>

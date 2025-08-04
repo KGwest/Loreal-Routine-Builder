@@ -17,7 +17,7 @@ window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         introOverlay.classList.add('slide-out');
         setTimeout(() => introOverlay.style.display = 'none', 1300);
-      }, 8000);
+      }, 3100);
     });
   // ---------- Product Grid Setup ----------
     productsContainer.innerHTML = `
@@ -26,38 +26,50 @@ window.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-
-  async function loadProducts() {
-    const { products } = await fetch("products.json").then(r => r.json());
-    const data = await response.json();
-    allProducts = data.products || data; // support either format
-    return products;
-  }
-
-  // 2) Fetch all products once:
+// ── PRODUCT LOADER ──
 async function loadProducts() {
-  const { products } = await fetch("products.json").then(r => r.json());
-  return products;
+  // fetch your JSON
+  const res = await fetch("products.json");
+  const data = await res.json();
+  
+  // support either { products: [...] } or [...]
+  allProducts = data.products || data;
+  return allProducts;
 }
-
+  // load & render everything at once by default
+    loadProducts().then(products => {
+      displayProducts(products);
+      renderRoutineCart();
+    });
 // 3) Render a batch of cards:
 function displayProducts(products) {
+   // only show “l’oréal” entries
+  const lorealOnly = products.filter(p =>
+  p.brand && p.brand.toLowerCase().includes("loréal")
+  );
   const tpl = document.getElementById("productCardTemplate");
   productsContainer.innerHTML = "";
-  products.forEach(p => {
+
+  lorealOnly.forEach(p => {
     const clone = tpl.content.cloneNode(true);
     const card = clone.querySelector(".product-card");
     card.dataset.id = p.id;
+
     clone.querySelector("img").src = p.image;
     clone.querySelector("img").alt = p.name;
     clone.querySelector(".product-name").textContent = p.name;
+
+    // leave brand & description in the template, but we’ll hide them with CSS
     clone.querySelector(".product-brand").textContent = p.brand;
     clone.querySelector(".description-hover").textContent = p.description;
+
     productsContainer.appendChild(clone);
   });
+
   attachCardClickListeners();
   renderSelectedProductsList();
-}
+  }
+
 
 
   function renderSelectedProductsList() {
@@ -108,7 +120,7 @@ function displayProducts(products) {
         localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
         updateProductStyles();
         renderSelectedProductsList();
-      }
+      };
 
       function updateProductStyles() {
         document.querySelectorAll(".product-card").forEach(card => {
@@ -167,11 +179,11 @@ function renderRoutineCart() {
     };
     li.appendChild(removeBtn);
     routineCartList.appendChild(li);
-  });
+   });
+  }
 
   // only enable Print if you have at least one product
   printRoutineBtn.disabled = selectedProducts.length === 0;
-}
 
 // extend your existing toggleProductSelection:
 function toggleProductSelection(id) {
@@ -288,17 +300,17 @@ If you need help with beauty routines, product picks, or finding your perfect sh
   }
 
   // ---------- Chat Input Handler ----------
-  chatForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const userText = userInput.value.trim();
-    if (!userText) return;
 
-    appendMessage("user", userText);
-    userInput.value = "";
+    const sendBtn = document.getElementById('sendBtn');
+    sendBtn.addEventListener('click', async () => {
+      const userText = userInput.value.trim();
+      if (!userText) return;
+      appendMessage('user', userText);
+      userInput.value = '';
+      const botResponse = await getAIResponse(userText);
+      appendMessage('ai', botResponse);
+    });
 
-    const botResponse = await getAIResponse(userText);
-    appendMessage("ai", botResponse);
-  });
 
   printRoutineBtn.addEventListener("click", async () => {
   if (!allProducts.length) await loadProducts();
@@ -415,6 +427,20 @@ confirmDownloadBtn.onclick = () => {
   link.download = "my-loreal-routine.pdf";
   link.click();
   previewModal.style.display = "none";
-};
-  }
-});
+      previewText.textContent = "";
+  };
+  };
+   });
+
+   function attachCardClickListeners() {
+  document.querySelectorAll(".product-card").forEach(card => {
+    card.addEventListener("click", () => {
+      // if user held Shift (or you detect small screens), show description
+      if (window.innerWidth < 600) {
+        card.classList.toggle("show-desc");
+      } else {
+        toggleProductSelection(card.dataset.id);
+      }
+    });
+  });
+}
