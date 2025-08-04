@@ -19,7 +19,8 @@
     <!-- L'Oréal Loading Screen -->
     <div id="introOverlay">
       <div class="spiral-container">
-        <img src="img/loreal-logo-loading.png"
+        <img
+          src="img/loreal-logo-loading.png"
           alt="L'Oréal Logo"
           class="loreal-logo-intro"
         />
@@ -29,12 +30,23 @@
       </div>
     </div>
 
-      <!-- ROUTINE CART SIDEBAR / NAV BAR-->
+    <!-- ROUTINE CART SIDEBAR / NAV BAR-->
 
         <nav id="sidebar">
-      <h2>Routine Cart</h2>
-      <ul id="selectedProductsList"></ul>
-      <button id="printRoutineBtn">Print Routine</button>
+          <h2>Routine Cart</h2>
+          <ul id="routineCartList"></ul>
+
+          <button id="generateRoutine" class="generate-btn">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
+          </button>
+          <button id="printRoutineBtn">Print Routine</button>
+          <button id="downloadPdfBtn">Download Routine PDF</button>
+          <button id="clearCartBtn">Clear Routine Cart</button>
+        </nav>
+
+      
+
+      
     </nav>
     <div class="page-wrapper">
       <!------- Header / Branding ------->
@@ -43,33 +55,22 @@
         <h1 class="site-title">Smart Routine &amp; Product Advisor</h1>
       </header>
 
-      <!-- Category Filter -->
+      <!-- right under your header -->
       <div class="search-section">
-        <select id="categoryFilter">
-          <option value="" disabled selected>Choose a Category</option>
-          <option value="cleanser">Cleansers</option>
-          <option value="moisturizer">Moisturizers & Treatments</option>
-          <option value="haircare">Haircare</option>
-          <option value="makeup">Makeup</option>
-          <option value="hair color">Hair Color</option>
-          <option value="hair styling">Hair Styling</option>
-          <option value="men's grooming">Men's Grooming</option>
-          <option value="suncare">Suncare</option>
-          <option value="fragrance">Fragrance</option>
-        </select>
+        <input
+          id="productSearch"
+          type="search"
+          placeholder="Search products…"
+        />
       </div>
+
+      <!-- single grid for everything -->
+      <div id="productsContainer" class="products-grid"></div>
 
       <!-- Products Grid -->
       <div id="productsContainer" class="products-grid"></div>
 
       <!-- Selected Products -->
-      <div class="selected-products">
-        <h2>Selected Products</h2>
-        <div id="selectedProductsList"></div>
-        <button id="generateRoutine" class="generate-btn">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> Generate Routine
-        </button>
-      </div>
 
       <template id="productCardTemplate">
         <div class="product-card">
@@ -97,7 +98,8 @@
             autocomplete="off"
             required
           />
-          <button type="button" id="sendBtn">
+          <!-- this is now a submit button, not “type=button” -->
+          <button type="submit" id="sendBtn">
             <i class="fa-solid fa-paper-plane"></i>
             <span class="visually-hidden">Send</span>
           </button>
@@ -119,9 +121,11 @@
 
       <!------- Footer Links ------->
       <footer class="site-footer">
-        <p>&copy; 2025 L'Oréal. All rights reserved.</p>
+        <p>&copy; 2025 L’Oréal. All rights reserved.</p>
         <nav>
-          <!-- These URLs are placeholders -->
+          <a href="https://github.com/KGwest/Loreal-Routine-Builder" target="_blank" rel="noopener">
+            View on GitHub
+          </a>
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Use</a>
           <a href="#">Contact</a>

@@ -1,19 +1,245 @@
 @import url('https://fonts.googleapis.com/css2?family=Playball&display=swap'); /* elegant fallback script */
 
-/* ——— Brand Colors ——— */
-:root {
-  --black: #000000;
-  --white: #ffffff;
-  --red: #ff003b;
-  --gold: #e3ae55;
+/* style.css */
+/* This applies whenever the page is in RTL mode (i.e. <html dir="rtl">) */
+:dir(rtl) {
+  direction: rtl;
+  unicode-bidi: embed; /* make sure text flows correctly */
 }
 
-/* —— basic reset —— */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* Swap sidebar to the right, main content to the left */
+:dir(rtl) #sidebar {
+  float: right;
+  margin-left: 0;
+  margin-right: 1rem;
 }
+:dir(rtl) .page-wrapper {
+  margin-left: 0;
+  margin-right: 1rem;
+}
+
+/* Align text in headers & buttons */
+:dir(rtl) .site-header,
+:dir(rtl) .site-footer,
+:dir(rtl) .search-section,
+:dir(rtl) .chat-form input,
+:dir(rtl) .chat-form button {
+  text-align: right;
+}
+
+
+
+/* If you have any hard-coded padding/margins: swap left/right */
+:dir(rtl) .chat-form {
+  gap: 12px; /* gap works both ways */
+}
+:dir(rtl) .chat-form input {
+  /* padding stays same; text-align: right will move the cursor */
+  text-align: right;
+}
+
+/* Flip any arrow icons if you have them via transform */
+:dir(rtl) .fa-paper-plane {
+  transform: scaleX(-1);
+}
+
+/* ——— Variables & Reset ——— */
+:root {
+  --black: #000;
+  --white: #fff;
+  --gold: #e3ae55;
+  --red: #ff003b;
+  --font: 'Poppins', sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ——— Layout ——— */
+body {
+  display: flex;
+  font-family: var(--font);
+  background: var(--white);
+  color: var(--black);
+  min-height: 100vh;
+}
+#sidebar {
+  width: 250px;
+  background: #000;
+  color: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+#sidebar button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;    /* equal vertical spacing */
+  padding: 0.75rem;
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.page-wrapper {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ——— Header & Search ——— */
+.site-header {
+  text-align: center;
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+.site-header .logo {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+  margin: 0 auto 0.5rem;
+  display: block;
+}
+.search-section {
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.search-section input {
+  width: 100%;
+  max-width: 400px;
+  padding: 0.5rem;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+}
+
+/* ——— Product Grid ——— */
+#productsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.product-card {
+  flex: 1 1 calc(25% - 1rem);
+  border: 1px solid #eee;
+  border-radius: 4px;
+  text-align: center;
+  padding: 0.5rem;
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+}
+.product-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.product-card img {
+  max-width: 100%;
+  height: auto;
+}
+.product-card h3 {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  height: 2.4em;
+  overflow: hidden;
+}
+
+/* tooltip */
+.tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  padding: 0.5rem;
+  font-size: 0.8rem;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* ——— Routine Cart ——— */
+.selected-products {
+  margin: 1.5rem 0;
+  border: 2px solid var(--gold);
+  padding: 1rem;
+  border-radius: 4px;
+}
+.selected-products h3 {
+  margin-bottom: 0.5rem;
+}
+.selected-products ol {
+  padding-left: 1.2rem;
+}
+
+/* ——— Chat Area ——— */
+.chatbox {
+  margin-top: auto; /* push to bottom if page grows */
+}
+.chat-window {
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 1rem;
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 0.75rem;
+}
+.chat-form {
+  display: flex;
+  gap: 0.5rem;
+}
+.chat-form input {
+  flex: 1;
+  padding: 0.5rem;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+}
+.chat-form button {
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  padding: 0 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ——— AI messages ——— */
+.msg.ai {
+  background: #FFF9F3;
+  border-left: 4px solid var(--gold);
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+.msg.ai.thinking {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: bold;
+}
+.msg.ai.thinking .dot {
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1.2); }
+}
+
+/* ——— Responsive ——— */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  .product-card { flex: 1 1 calc(50% - 1rem); }
+}
+@media (max-width: 480px) {
+  .product-card { flex: 1 1 100%; }
+}
+
 
 .branding.vertical {
   display: flex;
@@ -47,6 +273,7 @@
   width: 100vw;
   height: 100vh;
   background: #000;
+  pointer-events: all; 
   z-index: 99999;
   display: flex;
   justify-content: center;
@@ -131,50 +358,9 @@
   to { transform: translateX(-100vw); }
 }
 
-/* —— body + fonts —— */
-body {
-  font-family: 'Poppins', "Montserrat", Arial, Helvetica, sans-serif;
-  color: var(--black);
-  background-color: var(--white);
-  display: flex;
-  justify-content: flex-start;
-  animation: fadeIn 1s ease-in;
-}
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-.page-wrapper {
-  width: 90%;
-  max-width: 900px;
-}
-
-/* header */
-.site-header {
-  text-align: center;
-  padding-top: 40px;
-  color: var(--black);
-  border-bottom: 1px solid var(--gold);
-}
-
-.site-header .logo {
-  width: 75%;  /* or whatever your base was */
-  height: auto;
-}
-
-.search-section {
-  text-align: center;     /* center its contents */
-  margin: 2rem 0;         /* give it some breathing room vertically */
-}
-
-.site-title {
-  font-size: 26px;
-  font-family: 'Playfair Display', serif;
-  font-weight: 600;
-  letter-spacing: 0.03em;
-  color: var(--black);
 }
 
 /* chat window */
@@ -206,45 +392,7 @@ body {
   font-weight: 500;
 }
 
-/* input row */
-.chat-form {
-  display: flex;
-  gap: 12px;
-  margin-top: 16px;
-  font-family: 'Montserrat', sans-serif;
 
-}
-
-.chat-form input {
-  flex: 1;
-  border: 1px solid var(--gold);
-  font-size: 18px;
-  font-family: 'Poppins', sans-serif;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-.chat-form input:focus {
-  outline: 2px solid #000;
-  outline-offset: 2px;
-}
-
-.chat-form button {
-  font-size: 18px;
-  font-family: 'Poppins', sans-serif;
-  background: var(--black);
-  color: var(--white);
-  border: none;
-  border-radius: 4px;
-  padding: 0; /* Remove extra padding */
-  min-width: 48px;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background 0.3s;
-}
 
 .material-icons {
   font-size: 24px;
@@ -306,49 +454,6 @@ body {
 
 
 
-/* ——— CHATBOT  ——— */
-.msg.ai {
-  background-color: #FFF9F3; /* soft neutral gold tone */
-  border-left: 4px solid #E2BA35;
-  color: #000000;
-  padding: 1rem;
-  border-radius: 8px;
-  font-family: 'Oxygen', sans-serif;
-  margin-bottom: 1rem;
-  line-height: 1.6;
-}
-
-/* Style any links in the AI message */
-.msg.ai a {
-  color: #FF003B;
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.msg.ai a:hover {
-  text-decoration: underline;
-}
-
-
-.msg.ai.thinking {
-  display: flex;
-  gap: 6px;
-  padding: 10px;
-  background: #f6f6f6;
-  border-radius: 6px;
-  font-size: 24px;
-  color: var(--black);
-  font-weight: bold;
-}
-
-.msg.ai.thinking .dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--gold);
-  border-radius: 50%;
-  animation: blink 1.2s infinite ease-in-out;
-}
-
 .msg.ai.thinking .dot:nth-child(2) {
   animation-delay: 0.2s;
 }
@@ -385,13 +490,32 @@ body {
 }
 
 
-/* products grid */
+
+
 .products-grid {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 20px;
   margin: 30px 0;
 }
+
+/* Center the Generate button in its own wrapper */
+.generate-wrapper {
+  width: 100%;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.generate-btn {
+  background: var(--gold);
+  color: #000;
+  border: none;
+  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
 
 .product-card {
   flex: 0 1 calc(33.333% - 14px);
@@ -401,9 +525,30 @@ body {
   display: flex;
   gap: 15px;
   min-height: 160px;
+  position: relative;
+  overflow: visible;
   cursor: pointer;
   transition: border-color 0.3s, background 0.3s;
 }
+
+/* Show description on hover (desktop) */
+.product-card:hover .description-hover {
+  display: block;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(255,255,255,0.95);
+  padding: 0.5rem;
+  font-size: 0.85rem;
+  z-index: 10;
+}
+
+/* On mobile, tap to toggle a “show” class */
+.product-card.show-desc .description-hover {
+  display: block;
+}
+
 .product-card img {
   width: 110px;
   height: 110px;
@@ -446,10 +591,16 @@ body {
   right: 4px;
   background: transparent;
   border: none;
-  font-size: 16px;
+  color: var(--red);
+  font-size: 1.1rem;
   cursor: pointer;
 }
 
+.remove-btn:hover { color: #fff; }
+
+h2 {
+  text-align: center;
+}
 
 /* ─── SIDEBAR ─── */
 #sidebar {
@@ -460,6 +611,7 @@ body {
 }
 #sidebar h2 {
   margin-bottom: 1rem;
+  text-align: center;
 }
 #sidebar ul {
   list-style: none;
@@ -481,9 +633,10 @@ body {
 }
 
 #routineCartList li {
-  margin: 0.5rem 0;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
 }
 
 #routineCartList button {
@@ -503,4 +656,34 @@ body {
   font-weight: bold;
   cursor: pointer;
   border-radius: 4px;
+}
+
+#downloadPdfBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--gold);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 0.5rem 0; 
+}
+
+#clearCartBtn {
+  background: var(--gold);
+  color: var(--black);
+  border: none;
+  padding: 0.75rem;
+  border-radius: 4px;
+  width: 100%;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+
+/* Responsive sidebar collapse */
+@media (max-width: 768px) {
+  #sidebar { display: none; }
+  .page-wrapper { width: 100%; padding: 1rem; }
 }
