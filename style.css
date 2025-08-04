@@ -66,7 +66,7 @@
   transform: translate(-50%, -50%);
   width: 180px;
   z-index: 10;
-  animation: fadeInLogo 1.5s ease 2s forwards;
+  animation: fadeInLogo 1s ease 0.5s forwards;
 }
 
 /* ——— Spiral Circles ——— */
@@ -82,7 +82,7 @@
   height: 220px;
   top: 40px;
   left: 40px;
-  animation: spiralOut 3.5s ease-in 2.5s forwards;
+  animation: spiralOut 2s ease-in 0.5s forwards;
 }
 
 #circle2 {
@@ -90,7 +90,7 @@
   height: 260px;
   top: 20px;
   left: 20px;
-  animation: spiralOut 3.8s ease-in 3s forwards;
+  animation: spiralOut 2.5s ease-in 0.8s forwards;
 }
 
 #circle3 {
@@ -98,7 +98,7 @@
   height: 300px;
   top: 0;
   left: 0;
-  animation: spiralOut 4.4s ease-in 3.5s forwards;
+  animation: spiralOut 3s ease-in 1s forwards;
 }
 
 @keyframes spiralOut {
@@ -372,4 +372,125 @@ body {
   .chat-form input {
     font-size: 16px;
   }
+}
+
+
+/* products grid */
+.products-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 30px 0;
+}
+
+.product-card {
+  flex: 0 1 calc(33.333% - 14px);
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 4px;
+  display: flex;
+  gap: 15px;
+  min-height: 160px;
+  cursor: pointer;
+  transition: border-color 0.3s, background 0.3s;
+}
+.product-card img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+}
+.product-card .product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* visual feedback on selection */
+.product-card.selected {
+  border-color: var(--gold);
+  background: #fff9f3;
+}
+
+/* “Selected Products” list */
+.selected-products {
+  margin: 40px 0;
+  padding: 20px;
+  border: 2px solid var(--gold);
+  border-radius: 8px;
+}
+#selectedProductsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.selected-item {
+  background: #f9f9f9;
+  padding: 8px 12px;
+  border-radius: 4px;
+  position: relative;
+}
+.remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+/* ─── SIDEBAR ─── */
+#sidebar {
+  width: 250px;
+  background: #000;
+  color: #fff;
+  padding: 1rem;
+}
+#sidebar h2 {
+  margin-bottom: 1rem;
+}
+#sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+#sidebar li {
+  margin-bottom: 0.5rem;
+}
+.page-wrapper {
+  flex: 1;
+  padding: 2rem;
+}
+
+#routineCartList {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+#routineCartList li {
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+#routineCartList button {
+  background: transparent;
+  border: none;
+  color: var(--red);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#printRoutineBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background: var(--gold);
+  border: none;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 4px;
 }

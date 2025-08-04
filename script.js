@@ -17,45 +17,47 @@ window.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => {
         introOverlay.classList.add('slide-out');
         setTimeout(() => introOverlay.style.display = 'none', 1300);
-      }, 1500);
+      }, 8000);
     });
   // ---------- Product Grid Setup ----------
-  productsContainer.innerHTML = `
-    <div class="placeholder-message">Select a category to view products</div>
-  `;
+    productsContainer.innerHTML = `
+      <div class="placeholder-message">
+        Select a category to view products
+      </div>
+    `;
+
 
   async function loadProducts() {
-    const response = await fetch("products.json");
+    const { products } = await fetch("products.json").then(r => r.json());
     const data = await response.json();
     allProducts = data.products || data; // support either format
-    return allProducts;
+    return products;
   }
 
-  function displayProducts(products) {
-    const container = document.getElementById("productsContainer");
-    const template = document.getElementById("productCardTemplate");
-    container.innerHTML = ""; // Clear previous products
+  // 2) Fetch all products once:
+async function loadProducts() {
+  const { products } = await fetch("products.json").then(r => r.json());
+  return products;
+}
 
-    products.forEach((product) => {
-      const clone = template.content.cloneNode(true);
-
-      const card = clone.querySelector(".product-card");
-      card.dataset.id = product.id;
-
-      const img = clone.querySelector("img");
-      img.src = product.image;
-      img.alt = product.name;
-
-      clone.querySelector(".product-name").textContent = product.name;
-      clone.querySelector(".product-brand").textContent = product.brand;
-      clone.querySelector(".description-hover").textContent = product.description;
-
-      container.appendChild(clone);
-    });
-
-    attachCardClickListeners();
-    updateProductStyles();
-  }
+// 3) Render a batch of cards:
+function displayProducts(products) {
+  const tpl = document.getElementById("productCardTemplate");
+  productsContainer.innerHTML = "";
+  products.forEach(p => {
+    const clone = tpl.content.cloneNode(true);
+    const card = clone.querySelector(".product-card");
+    card.dataset.id = p.id;
+    clone.querySelector("img").src = p.image;
+    clone.querySelector("img").alt = p.name;
+    clone.querySelector(".product-name").textContent = p.name;
+    clone.querySelector(".product-brand").textContent = p.brand;
+    clone.querySelector(".description-hover").textContent = p.description;
+    productsContainer.appendChild(clone);
+  });
+  attachCardClickListeners();
+  renderSelectedProductsList();
+}
 
 
   function renderSelectedProductsList() {
@@ -75,7 +77,7 @@ window.addEventListener("DOMContentLoaded", () => {
       list.appendChild(item);
     });
   }
-
+      
   window.removeProduct = function (id) {
     selectedProducts = selectedProducts.filter((pid) => pid !== id);
     localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
@@ -95,40 +97,92 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 
   // ---------- Product Selection Logic ----------
-  let selectedProducts =
-    JSON.parse(localStorage.getItem("selectedProducts")) || [];
+ 
+      // 4) Keep track of selected IDs in localStorage:
+      let selectedProducts = JSON.parse(localStorage.getItem("selectedProducts")) || [];
 
-  function toggleProductSelection(id) {
-    const index = selectedProducts.indexOf(id);
-    if (index === -1) {
-      selectedProducts.push(id);
-    } else {
-      selectedProducts.splice(index, 1);
-    }
-    localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
-    updateProductStyles();
-  }
-
-  function updateProductStyles() {
-    const cards = document.querySelectorAll(".product-card");
-    cards.forEach((card) => {
-      const id = card.dataset.id;
-      if (selectedProducts.includes(id)) {
-        card.classList.add("selected");
-      } else {
-        card.classList.remove("selected");
+      function toggleProductSelection(id) {
+        const ix = selectedProducts.indexOf(id);
+        if (ix === -1) selectedProducts.push(id);
+        else selectedProducts.splice(ix, 1);
+        localStorage.setItem("selectedProducts", JSON.stringify(selectedProducts));
+        updateProductStyles();
+        renderSelectedProductsList();
       }
-    });
-  }
 
-  function attachCardClickListeners() {
-    const cards = document.querySelectorAll(".product-card");
-    cards.forEach((card) => {
-      card.addEventListener("click", () => {
-        toggleProductSelection(card.dataset.id);
-      });
-    });
-  }
+      function updateProductStyles() {
+        document.querySelectorAll(".product-card").forEach(card => {
+          card.classList.toggle("selected", selectedProducts.includes(card.dataset.id));
+        });
+      }
+
+      function attachCardClickListeners() {
+        document.querySelectorAll(".product-card").forEach(card => {
+          card.addEventListener("click", () => toggleProductSelection(card.dataset.id));
+        });
+      }
+
+      function renderSelectedProductsList() {
+        const list = document.getElementById("selectedProductsList");
+        list.innerHTML = "";
+        selectedProducts.forEach(id => {
+          const p = allProducts.find(x => x.id === id);
+          const div = document.createElement("div");
+          div.className = "selected-item";
+          div.innerHTML = `
+            ${p.name}
+            <button class="remove-btn">&times;</button>
+          `;
+          div.querySelector(".remove-btn").addEventListener("click", () => {
+            toggleProductSelection(id);
+          });
+          list.appendChild(div);
+        });
+      }
+
+          categoryFilter.addEventListener("change", async e => {
+            allProducts = allProducts.length ? allProducts : await loadProducts();
+            const filtered = allProducts.filter(p => p.category === e.target.value);
+            displayProducts(filtered);
+          });
+
+
+  // Maintaining cart
+  const routineCartList = document.getElementById("routineCartList");
+const printRoutineBtn = document.getElementById("printRoutineBtn");
+
+// whenever you toggle a product selection, also re-render the sidebar:
+function renderRoutineCart() {
+  routineCartList.innerHTML = "";
+  selectedProducts.forEach(id => {
+    const prod = allProducts.find(p => p.id === id);
+    if (!prod) return;
+    const li = document.createElement("li");
+    li.textContent = prod.name;
+    const removeBtn = document.createElement("button");
+    removeBtn.textContent = "×";
+    removeBtn.onclick = () => {
+      toggleProductSelection(id);
+      renderRoutineCart();
+    };
+    li.appendChild(removeBtn);
+    routineCartList.appendChild(li);
+  });
+
+  // only enable Print if you have at least one product
+  printRoutineBtn.disabled = selectedProducts.length === 0;
+}
+
+// extend your existing toggleProductSelection:
+function toggleProductSelection(id) {
+  // … your push/splice + localStorage …
+  updateProductStyles();
+  renderRoutineCart();
+}
+
+// initial render on page‐load
+renderRoutineCart();
+
 
   // ---------- Chat Display Functions ----------
   function appendMessage(role, text) {
@@ -148,7 +202,7 @@ window.addEventListener("DOMContentLoaded", () => {
   const loadingBubble = document.createElement('div');
   loadingBubble.className = 'msg ai thinking';
   loadingBubble.innerText  = '🌀 Thinking…';
-  chatWindow.appendChild(loadingBubble);
+ 
 
   function showLoadingMessage() {
   const chatWindow = document.getElementById("chatWindow");
@@ -245,6 +299,44 @@ If you need help with beauty routines, product picks, or finding your perfect sh
     const botResponse = await getAIResponse(userText);
     appendMessage("ai", botResponse);
   });
+
+  printRoutineBtn.addEventListener("click", async () => {
+  if (!allProducts.length) await loadProducts();
+  const chosen = allProducts.filter(p => selectedProducts.includes(p.id));
+
+  // 1) turn the selected products into a bullet list
+  const productLines = chosen
+    .map(
+      p => `- ${p.name} (${p.brand} — ${p.category}): ${p.description}`
+    )
+    .join("\n");
+
+  // 2) craft a focused user prompt
+  const routinePrompt = {
+    role: "user",
+    content: `
+The user has selected these L’Oréal products:
+${productLines}
+
+Please write a step-by-step skincare & makeup routine using exactly those products. 
+If an extra moisturizing step is needed, suggest an additional L’Oréal moisturizer.
+Format your response so it’s printer-friendly (simple numbered steps, minimal markup).
+`
+  };
+
+  // 3) show a quick “loading” message
+  appendMessage("ai", "🌀 Generating your printable routine…");
+
+  // 4) send it off to the AI
+  messages.push(routinePrompt);
+  const reply = await getAIResponse();    // your existing function will POST messages[]
+
+  // 5) open a print window
+  const printWindow = window.open("", "_blank");
+  printWindow.document.body.innerHTML = `<pre>${reply}</pre>`;
+  printWindow.print();
+});
+
 
   // ---------- Generate Routine Button ----------
 
